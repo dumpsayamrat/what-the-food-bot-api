@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import router from './routes';
 
 const app = express();
-const port = 8000;
+const port = (process.env.PORT || 8000);
 
 // Initialize Firebase
 const config = {
@@ -23,5 +23,5 @@ app.use(bodyParser.json());
 app.use('/api', router);
 
 app.listen(port, () => {
-  console.log('We are live on ' + port);
+  console.log('Node app is running on port', port);
 });
