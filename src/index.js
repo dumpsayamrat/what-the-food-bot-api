@@ -6,8 +6,6 @@ import router from './routes';
 
 const app = express();
 const port = (process.env.PORT || 8000);
-
-// Initialize Firebase
 const config = {
   apiKey: "AIzaSyBPpB-eMr1HYjjTwjCCSOS6dNd9cacJl2o",
   authDomain: "whatthefood-c0c35.firebaseapp.com",
@@ -15,10 +13,13 @@ const config = {
   storageBucket: "whatthefood-c0c35.appspot.com",
   messagingSenderId: "531442847040"
 };
-firebase.initializeApp(config);
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+	limit : '100kb'
+}));
+
+firebase.initializeApp(config);
 
 app.use('/api', router);
 
