@@ -9,11 +9,11 @@ const port = (process.env.PORT || 8000);
 
 // Initialize Firebase
 const config = {
-  apiKey: "AIzaSyBZbhkf1tu5gjmhra9xpE3aCYMZDsGggSQ",
-  authDomain: "manager-ab3a6.firebaseapp.com",
-  databaseURL: "https://manager-ab3a6.firebaseio.com",
-  storageBucket: "manager-ab3a6.appspot.com",
-  messagingSenderId: "950598348794"
+  apiKey: "AIzaSyBPpB-eMr1HYjjTwjCCSOS6dNd9cacJl2o",
+  authDomain: "whatthefood-c0c35.firebaseapp.com",
+  databaseURL: "https://whatthefood-c0c35.firebaseio.com",
+  storageBucket: "whatthefood-c0c35.appspot.com",
+  messagingSenderId: "531442847040"
 };
 firebase.initializeApp(config);
 
