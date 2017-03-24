@@ -35,20 +35,32 @@ router.post('/categories/food/add/v1', ({ query }, res) => {
   });
 });
 
-router.post('/categories/food/add', ({ body, query }, res) => {
-  const { category, foodName, image } = body;
-  console.log('BODY category: ', body.user_food_name);
-  console.log('BODY: ', body);
-  console.log('QUERY: ', query);
-  res.json({
-    messages: [{ text: 'กระผมบันทึกข้อมูลสำเร็จแล้ว' }]
+router.post('/categories/food/add', ({ body }, res) => {
+  const { user_category_name, user_food_name, user_pic_name } = body;
+  const payload = {
+    name: user_food_name,
+    image: user_pic_name
+  };
+
+  firebase.database().ref(`categories/${user_category_name}`).push(payload)
+    .then((response) => {
+      res.json({
+        messages: [
+          {
+            text: 'กระผมบันทึกข้อมูลสำเร็จแล้วครับ ขอบคุณที่ช่วยแนะนำอาหารคร๊าบ'
+          },
+          {
+            attachment:{
+              type: 'template',
+              payload: {
+                template_type: 'generic',
+                elements: foodToGalleryElements(payload)
+              }
+            }
+          }
+        ]
+      });
   });
-  // firebase.database().ref(`categories/${category}`).push({
-  //   name: foodName,
-  //   image
-  // }).then((response) => {
-  //   res.json(`ADDED food ${foodName} in ${category} category`);
-  // });
 });
 
 router.get('/categories', (req, res) => {
