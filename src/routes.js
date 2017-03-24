@@ -25,7 +25,7 @@ router.post('/categories/add', ({ body }, res) => {
   });
 });
 
-router.post('/categories/food/add', ({ query }, res) => {
+router.post('/categories/food/add/v1', ({ query }, res) => {
   const { category, foodName, image } = query;
   firebase.database().ref(`categories/${category}`).push({
     name: foodName,
@@ -33,6 +33,22 @@ router.post('/categories/food/add', ({ query }, res) => {
   }).then((response) => {
     res.json(`ADDED food ${foodName} in ${category} category`);
   });
+});
+
+router.post('/categories/food/add', ({ body, query }, res) => {
+  const { category, foodName, image } = body;
+  console.log('BODY category: ', body.user_food_name);
+  console.log('BODY: ', body);
+  console.log('QUERY: ', query);
+  res.json({
+    messages: [{ text: 'กระผมบันทึกข้อมูลสำเร็จแล้ว' }]
+  });
+  // firebase.database().ref(`categories/${category}`).push({
+  //   name: foodName,
+  //   image
+  // }).then((response) => {
+  //   res.json(`ADDED food ${foodName} in ${category} category`);
+  // });
 });
 
 router.get('/categories', (req, res) => {
@@ -43,6 +59,20 @@ router.get('/categories', (req, res) => {
           text: 'ไหนลองเลือกประเภทอาหารดูก่อนละกัน',
           quick_replies: Object.keys(snapshot.val())
             .map(toQuickReply(['Food selecting'], 'type_of_food'))
+        }
+      ]
+    });
+  });
+});
+
+router.get('/categories/for-add-food', (req, res) => {
+  firebase.database().ref('/categories').on('value', snapshot => {
+    res.json({
+      messages: [
+        {
+          text: 'กระผมขอประเภทอาหารด้วยนะคร๊าบ',
+          quick_replies: Object.keys(snapshot.val())
+            .map(toQuickReply([], 'user_category_name'))
         }
       ]
     });

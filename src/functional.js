@@ -15,7 +15,7 @@ export const foodToGalleryElements = ({ name, image }) => ({
     {
       type: 'web_url',
       url: `https://www.google.co.th/#q=${name}&*`,
-      title: 'More details'
+      title: 'ดูจาก Google'
     }
   ]
 });
