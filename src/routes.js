@@ -1,7 +1,7 @@
 import express from 'express';
 import firebase from 'firebase';
 
-import { toQuickReply } from './functional';
+import { toQuickReply, shuffle, foodToGalleryElements } from './functional';
 
 const router = express.Router();
 
@@ -25,21 +25,22 @@ router.post('/categories/add', ({ body }, res) => {
   });
 });
 
-router.post('/categories/food/add', ({ body, query }, res) => {
-  const { category, foodName } = query;
+router.post('/categories/food/add', ({ query }, res) => {
+  const { category, foodName, image } = query;
   firebase.database().ref(`categories/${category}`).push({
-    name: foodName
+    name: foodName,
+    image
   }).then((response) => {
     res.json(`ADDED food ${foodName} in ${category} category`);
   });
 });
 
-router.get('/categories', ({ body }, res) => {
+router.get('/categories', (req, res) => {
   firebase.database().ref('/categories').on('value', snapshot => {
     res.json({
       messages: [
         {
-          text:  'testRedirectInQuickReply',
+          text:  'ไหนลองเลือกประเภทอาหารดูก่อนละกัน',
           quick_replies: Object.keys(snapshot.val())
             .map(toQuickReply(['Food selecting'], 'type_of_food'))
         }
@@ -48,62 +49,29 @@ router.get('/categories', ({ body }, res) => {
   });
 });
 
-router.get('/text', ({ body }, res) => {
-  res.json({
-    messages: [
-      { text:  'test text 12121' },
-      { text: 'test text 111'}
-    ]
-  });
-});
+router.get('/foods', ({ query }, res) => {
+  const { category, limit = 3 } = query;
+  firebase.database().ref(`/categories/${category}`).on('value', snapshot => {
+    const obj = snapshot.val();
+    const foods= shuffle(Object.keys(obj))
+      .filter(k => obj[k].name != null)
+      .map(k => obj[k]);
 
-router.get('/real', ({ body }, res) => {
-  res.json({
-    messages: [
-      {
-        text:  'testRedirectInQuickReply 555',
-        quick_replies: [
-          {
-            title: "อาหารน้ำ",
-            block_names: [
-              "Food selecting"
-            ],
-            set_attributes: {
-              type_of_food: "อาหารน้ำ"
-            }
-          },
-          {
-            title: "อาหารเส้น",
-            block_names: [
-              "Food selecting"
-            ],
-            set_attributes: {
-              "type_of_food": "อาหารเส้น"
+    res.json({
+      messages: [
+        {
+          attachment:{
+            type: 'template',
+            payload: {
+              template_type: 'generic',
+              elements: foods
+                .slice(0, limit)
+                .map(foodToGalleryElements)
             }
           }
-        ]
-      }
-    ]
-  });
-});
-
-router.get('/quick', ({ body }, res) => {
-  res.json({
-    messages: [
-      {
-        text:  'test text 12121',
-        quick_replies: [
-          {
-            title:'DUMMY',
-            block_names:["dummy"]
-          },
-          {
-            title:'DUMMY2',
-            block_names:["dummy"]
-          }
-        ]
-      }
-    ]
+        }
+      ]
+    });
   });
 });
 
