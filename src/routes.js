@@ -1,6 +1,8 @@
 import express from 'express';
 import firebase from 'firebase';
 
+import { toQuickReply } from './functional';
+
 const router = express.Router();
 
 router.use((req, res, next) => {
@@ -34,7 +36,14 @@ router.post('/categories/food/add', ({ body, query }, res) => {
 
 router.get('/categories', ({ body }, res) => {
   firebase.database().ref('/categories').on('value', snapshot => {
-    res.json(snapshot.val());
+    res.json({
+      messages: [
+        {
+          quick_replies: Object.keys(snapshot.val())
+            .map(toQuickReply(['Food selecting'], 'type_of_food'))
+        }
+      ]
+    });
   });
 });
 
