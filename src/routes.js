@@ -39,11 +39,71 @@ router.get('/categories', ({ body }, res) => {
     res.json({
       messages: [
         {
+          text:  'testRedirectInQuickReply',
           quick_replies: Object.keys(snapshot.val())
             .map(toQuickReply(['Food selecting'], 'type_of_food'))
         }
       ]
     });
+  });
+});
+
+router.get('/text', ({ body }, res) => {
+  res.json({
+    messages: [
+      { text:  'test text 12121' },
+      { text: 'test text 111'}
+    ]
+  });
+});
+
+router.get('/real', ({ body }, res) => {
+  res.json({
+    messages: [
+      {
+        text:  'testRedirectInQuickReply 555',
+        quick_replies: [
+          {
+            title: "อาหารน้ำ",
+            block_names: [
+              "Food selecting"
+            ],
+            set_attributes: {
+              type_of_food: "อาหารน้ำ"
+            }
+          },
+          {
+            title: "อาหารเส้น",
+            block_names: [
+              "Food selecting"
+            ],
+            set_attributes: {
+              "type_of_food": "อาหารเส้น"
+            }
+          }
+        ]
+      }
+    ]
+  });
+});
+
+router.get('/quick', ({ body }, res) => {
+  res.json({
+    messages: [
+      {
+        text:  'test text 12121',
+        quick_replies: [
+          {
+            title:'DUMMY',
+            block_names:["dummy"]
+          },
+          {
+            title:'DUMMY2',
+            block_names:["dummy"]
+          }
+        ]
+      }
+    ]
   });
 });
 
