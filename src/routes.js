@@ -40,7 +40,7 @@ router.get('/categories', (req, res) => {
     res.json({
       messages: [
         {
-          text:  'ไหนลองเลือกประเภทอาหารดูก่อนละกัน',
+          text: 'ไหนลองเลือกประเภทอาหารดูก่อนละกัน',
           quick_replies: Object.keys(snapshot.val())
             .map(toQuickReply(['Food selecting'], 'type_of_food'))
         }
